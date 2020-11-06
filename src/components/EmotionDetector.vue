@@ -16,7 +16,7 @@ export default {
   methods: {
     getFace(){
       var that = this
-      that.$axios.get("/faceRecognize/getEmotion")
+      that.$axios.get("/emotions/getEmotion")
       .then((res) => {
         res = res.data
           if (res.code == "1") {
