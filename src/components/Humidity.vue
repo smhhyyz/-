@@ -16,8 +16,8 @@ export default {
   }),
   mounted() {},
   methods: {
-    updateData() {
-      this.humidity = this.$parent.humidity;
+    updateData(dt) {
+      this.humidity = dt;
     },
   },
 };

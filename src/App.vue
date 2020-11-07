@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main>
+    <v-main class="cursorNone">
       <v-tabs v-model="tabs" centered>
         <v-tab>Main Page</v-tab>
         <v-tab>Emotion variation</v-tab>
@@ -95,8 +95,8 @@ export default {
             console.log(res);
             that.temperature = res.data.tmp;
             that.humidity = res.data.hmd;
-            that.$refs.humidity.updateData();
-            that.$refs.temperature.updateData();
+            that.$refs.humidity.updateData(that.humidity);
+            that.$refs.temperature.updateData(that.temperature);
           }
         }
         setTimeout(function () {
@@ -105,5 +105,8 @@ export default {
       });
     },
   },
+  mounted(){
+    this.getTemperature();
+  }
 };
 </script>

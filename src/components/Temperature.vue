@@ -21,8 +21,8 @@ export default {
     temperature: "0.0",
   }),
   methods: {
-    updateData() {
-      this.temperature = this.$parent.temperature;
+    updateData(dt) {
+      this.temperature = dt;
     },
   },
 };
