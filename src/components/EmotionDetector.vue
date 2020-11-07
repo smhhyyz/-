@@ -1,14 +1,20 @@
 <template>
   <div>
-    <v-col>
-      <v-row>
-        <v-icon :color="color" x-large>{{ icon }}</v-icon>
-        <span v-text="emotion"></span>
-      </v-row>
-      <v-row>
-        <div id="charts" style="width: 400px; height: 200px"></div>
-      </v-row>
-    </v-col>
+    <v-card elevation="3" outlined >
+      <template slot="progress">
+        <v-progress-linear
+          color="blue"
+          height="10"
+          indeterminate
+        ></v-progress-linear>
+      </template>
+      <v-card-title>Emotion</v-card-title>
+          <v-divider class="mx-2"></v-divider>
+      <v-card-text>
+        <span v-text="emotion" style="margin-right:15px"></span>
+        <v-icon :color="color" x-large right>{{ icon }}</v-icon>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
@@ -16,15 +22,15 @@
 export default {
   name: "EmotionDetector",
   data: () => ({
-    emotion: "Detecting...",
+    emotion: "Detecting",
     icon: "fa-circle-notch fa-spin",
     color: "blue",
-    chart: null,
-    emotionTable: ["angry", "disgust", "sad", "surprise", "neutral", "happy"],
+    loading: true,
   }),
   methods: {
     getFace() {
       var that = this;
+      that.loading = true;
       that.$axios.get("/emotions/getEmotion").then((res) => {
         res = res.data;
         if (res.code == "1") {
@@ -61,83 +67,25 @@ export default {
             that.emotion = res.data.emotion;
           } else {
             console.log(res);
-            console.log("unexcepted emotion:\t" + that.emotion);
+            console.log("unexcepted emotion:\t" + res.data.emotion);
           }
           if (emotionCode >= 0 && emotionCode <= 5) {
+            that.loading = false;
             var time = new Date().toLocaleTimeString().replace(/^\D*/, "");
-            that.updateChart(time, emotionCode);
+            that.$emit('updateChart',time, emotionCode);
           }
+          that.$emit('workingTime',res.data.begin_time)
+        }else if(res.code == "2"){
+          that.$emit('workingTime',0);
         }
         setTimeout(function () {
           that.getFace();
         }, 500);
       });
     },
-    updateChart(x, y) {
-      var opt = this.chart.getOption();
-      var data = opt.series[0].data;
-      if (opt.xAxis[0].data.length > 10) {
-        opt.xAxis[0].data.shift();
-      }
-      opt.xAxis[0].data.push(x);
-      if (data.length > 10) {
-        data.shift();
-      }
-      data.push(y);
-
-      this.chart.setOption(opt);
-    },
-    drawLine() {
-      var that = this;
-      this.chart = this.$echarts.init(document.getElementById("charts"));
-      // 绘制图表
-      this.chart.setOption({
-        xAxis: {
-          type: "category",
-          data: [
-            "00:00",
-            "00:00",
-            "00:00",
-            "00:00",
-            "00:00",
-            "00:00",
-            "00:00",
-            "00:00",
-            "00:00",
-            "00:00",
-          ],
-          axisLabel:{
-            show: true,
-            color: "white",
-          }
-        },
-        yAxis: {
-          type: "value",
-          max: 5,
-          min: 0,
-          axisLabel: {
-            show: true,
-            interval: "auto", // {number}
-            color: "white",
-            align: "right",
-            fontSize: 8,
-            formatter: function (value, index) {
-              return that.emotionTable[value];
-            }, // Template formatter!
-          },
-        },
-        series: [
-          {
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            type: "line",
-          },
-        ],
-      });
-    },
   },
   mounted() {
     this.getFace();
-    this.drawLine();
   },
 };
 </script>
