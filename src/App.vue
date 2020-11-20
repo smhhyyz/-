@@ -11,11 +11,15 @@
         <v-tab-item>
           <v-card flat style="width: 800px; height: 480px">
             <v-row>
-              <FlipClock style="margin-top:50px;margin-bottom:50px" class="mx-auto" />
+              <FlipClock
+                style="margin-top: 50px; margin-bottom: 50px"
+                class="mx-auto"
+              />
             </v-row>
             <v-row>
-              <v-col >
-                <EmotionDetector class="xs-6 sm-6 md-6"
+              <v-col>
+                <EmotionDetector
+                  class="xs-6 sm-6 md-6"
                   @updateChart="updateChart"
                   @workingTime="updateWorkingTime"
                   ref="emotion"
@@ -23,16 +27,19 @@
               </v-col>
               <v-col>
                 <v-row>
-                  <v-card elevation="3" outlined  style="width:93%">
+                  <v-card elevation="3" outlined style="width: 93%">
                     <v-row>
-                      <Temperature style="width:40%" ref="temperature" />
+                      <Temperature style="width: 40%" ref="temperature" />
                       <v-divider vertical></v-divider>
-                      <Humidity  style="width:40%;margin-left:20px" ref="humidity" />
+                      <Humidity
+                        style="width: 40%; margin-left: 20px"
+                        ref="humidity"
+                      />
                     </v-row>
                   </v-card>
                 </v-row>
                 <v-row>
-                  <RelaxReminder style="width:93%" ref="reminder" />
+                  <RelaxReminder style="width: 93%" ref="reminder" />
                 </v-row>
               </v-col>
             </v-row>
@@ -50,7 +57,11 @@
 
         <!-- 环境变化表格页 -->
         <v-tab-item :eager="true" style="width: 800px; height: 480px">
-          <v-card flat> </v-card>
+          <v-card flat>
+            <v-col>
+              <TempChart ref="tempChart" />
+            </v-col>
+          </v-card>
         </v-tab-item>
       </v-tabs-items>
     </v-main>
@@ -62,7 +73,8 @@ import FlipClock from "kuan-vue-flip-clock";
 import EmotionDetector from "./components/EmotionDetector";
 import Temperature from "./components/Temperature";
 import Humidity from "./components/Humidity";
-import EmotionChart from "./components/Chart";
+import EmotionChart from "./components/EmotionChart";
+import TempChart from "./components/TempChart";
 import RelaxReminder from "./components/RelaxReminder";
 export default {
   name: "App",
@@ -73,6 +85,7 @@ export default {
     EmotionChart,
     Humidity,
     RelaxReminder,
+    TempChart,
   },
   data: () => ({
     tabs: null,
@@ -97,16 +110,18 @@ export default {
             that.humidity = res.data.hmd;
             that.$refs.humidity.updateData(that.humidity);
             that.$refs.temperature.updateData(that.temperature);
+            var time = new Date().toLocaleTimeString().replace(/^\D*/, "");
+            that.$refs.tempChart.updateChart(time,that.temperature,that.humidity);
           }
         }
         setTimeout(function () {
           that.getTemperature();
-        }, 25000);
+        }, 1000);
       });
     },
   },
-  mounted(){
+  mounted() {
     this.getTemperature();
-  }
+  },
 };
 </script>

@@ -6,7 +6,7 @@
           v-text="'Your are working ' + existsTime + ' continuously'"
           style="margin-right: 15px"
         ></p>
-        <p v-text="remindText" style="margin-right: 15px" v-show="isRemind"></p>
+        <p v-text="remindText" style="margin-right: 15px" v-show="needRemind"></p>
       </v-card-text>
     </v-card>
   </div>
@@ -17,14 +17,19 @@ export default {
   name: "RelaxReminder",
   data: () => ({
     existsTime: "0",
-    remindText: "",
-    isRemind: false,
+    remindText: "Time to Relax !!!",
+    needRemind:false,
+    threshouldHour:1,
+    remindGap:30,
+    notRelax:0
   }),
   methods: {
     formatDate(date) {
       if (date == 0) {
           this.existsTime = "0";
-          this.isRemind = false;
+          this.notRelax = 0;
+          this.needRemind = false;
+          return;
       }
       var nowDate = Date.parse(new Date()) / 1000;
       var second = nowDate - date;
@@ -37,12 +42,19 @@ export default {
         minute > 9 ? minute.toString()+" : " : "0" + minute.toString()+" : ";
       this.existsTime +=
         second > 9 ? second.toString() : "0" + second.toString();
-      if (hour > 1) {
-        this.isRemind = true;
-      } else {
-        this.isRemind = false;
-      }
+      if (hour > this.threshouldHour) {
+        if(this.notRelaxYet()){
+          this.remind()
+        }
+      } 
     },
+    notRelaxYet(){
+      this.notRelax +=1;
+      return (this.notRelax % this.remindGap == 0)
+    },
+    remind(){
+      this.needRemind = true;
+    }
   },
 };
 </script>
