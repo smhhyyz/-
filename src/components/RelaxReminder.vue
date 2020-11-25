@@ -20,6 +20,7 @@
 <script>
 export default {
   name: "RelaxReminder",
+  // 定义属性，名称为parentThreshouldTime，用于接收来自父组件的数据
   props: ["parentThreshouldTime"],
   data: () => ({
     init:false,
@@ -31,7 +32,9 @@ export default {
     notRelax: 0,
   }),
   watch: {
+    //监控parentThreshouldTime属性，当发生变化时，进行处理
     parentThreshouldTime: function () {
+        //利用正则计算出选择的事件，并转化成分钟单位
         var hour = this.parentThreshouldTime.match(/\d+(?=:)/)
         var minute = this.parentThreshouldTime.match(/(?<=:)\d+/)
         this.threshouldTime = parseInt(hour[0])*60 + parseInt(minute[0]);
@@ -68,7 +71,9 @@ export default {
         }
       }
     },
+    //主要用于判断已经提醒需要休息，但是还未休息的情况
     notRelaxYet() {
+      //每remindGap次返回一次true
       var bl = this.notRelax % this.remindGap == 0;
       this.notRelax += 1;
       return bl;

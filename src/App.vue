@@ -49,6 +49,8 @@
                   </v-card>
                 </v-row>
                 <v-row>
+                  <!-- parentThreshouldTime是RelaxReminder.vue中，自定义组件的一个属性 -->
+                  <!-- 此处将picker变量与该属性绑定 -->
                   <RelaxReminder
                     :parentThreshouldTime="picker"
                     style="width: 93%"
