@@ -43,7 +43,7 @@ export default {
           } else if (res.data.emotion == "neutral") {
             that.icon = "fa-meh";
             that.color = "blue";
-            emotionCode = 4;
+            emotionCode = 3;
             that.emotion = res.data.emotion;
           } else if (res.data.emotion == "angry") {
             that.icon = "fa-angry";
@@ -58,9 +58,9 @@ export default {
           } else if (res.data.emotion == "surprise") {
             that.icon = "fa-surprise";
             that.color = "yellow";
-            emotionCode = 3;
+            emotionCode = 4;
             that.emotion = res.data.emotion;
-          } else if (res.data.emotion == "disgust") {
+          } else if (res.data.emotion == "fear") {
             that.icon = "fa-frown";
             that.color = "red";
             emotionCode = 1;

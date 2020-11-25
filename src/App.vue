@@ -5,6 +5,7 @@
         <v-tab>Main Page</v-tab>
         <v-tab>Emotion variation</v-tab>
         <v-tab>Environment variation</v-tab>
+        <v-tab>setting</v-tab>
       </v-tabs>
       <v-tabs-items v-model="tabs">
         <!-- 主页 -->
@@ -39,7 +40,11 @@
                   </v-card>
                 </v-row>
                 <v-row>
-                  <RelaxReminder style="width: 93%" ref="reminder" />
+                  <RelaxReminder
+                    :parentThreshouldTime="picker"
+                    style="width: 93%"
+                    ref="reminder"
+                  />
                 </v-row>
               </v-col>
             </v-row>
@@ -62,6 +67,15 @@
               <TempChart ref="tempChart" />
             </v-col>
           </v-card>
+        </v-tab-item>
+        <v-tab-item>
+          <v-row justify="center">
+            <v-time-picker
+              v-model="picker"
+              :landscape="$vuetify.breakpoint.smAndUp"
+              format="24hr"
+            ></v-time-picker>
+          </v-row>
         </v-tab-item>
       </v-tabs-items>
     </v-main>
@@ -91,6 +105,7 @@ export default {
     tabs: null,
     temperature: "0.0",
     humidity: "0.0",
+    picker: "00:30",
   }),
   methods: {
     updateChart(x, y) {
@@ -111,12 +126,16 @@ export default {
             that.$refs.humidity.updateData(that.humidity);
             that.$refs.temperature.updateData(that.temperature);
             var time = new Date().toLocaleTimeString().replace(/^\D*/, "");
-            that.$refs.tempChart.updateChart(time,that.temperature,that.humidity);
+            that.$refs.tempChart.updateChart(
+              time,
+              that.temperature,
+              that.humidity
+            );
           }
         }
         setTimeout(function () {
           that.getTemperature();
-        }, 1000);
+        }, 5000);
       });
     },
   },

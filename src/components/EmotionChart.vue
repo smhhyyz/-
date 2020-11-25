@@ -7,7 +7,7 @@ export default {
   name: "EmotionChart",
   data: () => ({
     chart: null,
-    emotionTable: ["angry", "disgust", "sad", "surprise", "neutral", "happy"],
+    emotionTable: ["angry","fear", "sad","neutral","surprise","happy"],
   }),
   mounted() {
     this.drawLine();
@@ -75,8 +75,9 @@ export default {
         },
         series: [
           {
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            data: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
             type: "line",
+            smooth: true,
           },
         ],
       });
