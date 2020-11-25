@@ -30,8 +30,10 @@ export default {
   }),
   watch: {
     parentThreshouldTime: function () {
-        var tm = this.parentThreshouldTime.split(":")
-        this.threshouldTime = parseInt(tm[0])*60 + parseInt(tm[1]);
+
+        var hour = this.parentThreshouldTime.match(/\d+(?=:)/)
+        var minute = this.parentThreshouldTime.match(/(?<=:)\d+/)
+        this.threshouldTime = parseInt(hour[0])*60 + parseInt(minute[0]);
     },
   },
   methods: {
