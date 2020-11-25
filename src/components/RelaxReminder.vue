@@ -5,6 +5,7 @@
         <p
           v-text="'Your are working ' + existsTime + ' continuously'"
           style="margin-right: 15px"
+          v-show="init"
         ></p>
         <p
           v-text="remindText"
@@ -21,6 +22,7 @@ export default {
   name: "RelaxReminder",
   props: ["parentThreshouldTime"],
   data: () => ({
+    init:false,
     existsTime: "0",
     remindText: "Time to Relax !!!",
     needRemind: false,
@@ -30,7 +32,6 @@ export default {
   }),
   watch: {
     parentThreshouldTime: function () {
-
         var hour = this.parentThreshouldTime.match(/\d+(?=:)/)
         var minute = this.parentThreshouldTime.match(/(?<=:)\d+/)
         this.threshouldTime = parseInt(hour[0])*60 + parseInt(minute[0]);
@@ -42,6 +43,7 @@ export default {
         this.existsTime = "0";
         this.notRelax = 0;
         this.needRemind = false;
+        this.init = false;
         return;
       }
       var nowDate = Date.parse(new Date()) / 1000;
@@ -58,6 +60,8 @@ export default {
           : "0" + minute.toString() + " : ";
       this.existsTime +=
         second > 9 ? second.toString() : "0" + second.toString();
+      this.init = true;
+
       if (minute + hour * 60 >= this.threshouldTime) {
         if (this.notRelaxYet()) {
           this.remind();

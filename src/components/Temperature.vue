@@ -1,9 +1,9 @@
 <template>
-  <div style="margin:12px">
-    <v-icon large left style="margin-left: 6px; margin-right: 10px">
+  <div style="margin-left:14px;margin-top:14px">
+    <v-icon large left style="margin-left: 6px; margin-right: 5px">
       {{ temp_icon }}
     </v-icon>
-    <span style="font-size: 30px" v-text="temperature + '℃'"></span>
+    <span style="font-size: 22px" v-text="temperature + '℃'"></span>
   </div>
 </template>
 

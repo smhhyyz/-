@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card elevation="3" outlined >
+    <v-card elevation="3" outlined>
       <template slot="progress">
         <v-progress-linear
           color="blue"
@@ -9,9 +9,9 @@
         ></v-progress-linear>
       </template>
       <v-card-title>Emotion</v-card-title>
-          <v-divider class="mx-2"></v-divider>
+      <v-divider class="mx-2"></v-divider>
       <v-card-text>
-        <span v-text="emotion" style="margin-right:15px"></span>
+        <span v-text="emotion" style="margin-right: 15px"></span>
         <v-icon :color="color" x-large right>{{ icon }}</v-icon>
       </v-card-text>
     </v-card>
@@ -25,6 +25,7 @@ export default {
     emotion: "Detecting",
     icon: "fa-circle-notch fa-spin",
     color: "blue",
+    shouldRest: false,
     loading: true,
   }),
   methods: {
@@ -35,6 +36,7 @@ export default {
         res = res.data;
         if (res.code == "1") {
           var emotionCode = -1;
+          that.shouldRest = res.data.shouldRest;
           if (res.data.emotion == "happy") {
             that.icon = "fa-laugh-beam";
             that.color = "green";
@@ -72,15 +74,22 @@ export default {
           if (emotionCode >= 0 && emotionCode <= 5) {
             that.loading = false;
             var time = new Date().toLocaleTimeString().replace(/^\D*/, "");
-            that.$emit('updateChart',time, emotionCode);
+            //发起updateChart事件，同时将time和emotionCode变量同时发送至外部
+            that.$emit("updateChart", time, emotionCode);
           }
-          that.$emit('workingTime',res.data.begin_time)
-        }else if(res.code == "2"){
-          that.$emit('workingTime',0);
+          if (that.shouldRest) {
+            that.$emit("shouldRest");
+          }
+          //发起workingTime事件，同时将res.data.begin_time发送至外部
+          that.$emit("workingTime", res.data.begin_time);
+        } else if (res.code == "2") {
+          //发起workingTime事件，同时将0发送至外部
+          that.$emit("workingTime", 0);
         }
+        //5秒后再次检测表情
         setTimeout(function () {
           that.getFace();
-        }, 500);
+        }, 5000);
       });
     },
   },
