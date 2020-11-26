@@ -126,7 +126,7 @@ export default {
     //保存天气数据
     weather: "",
     //保存时间选择器的数据
-    picker: "",
+    picker: "00:30",
   }),
   methods: {
     //更新表情图表
